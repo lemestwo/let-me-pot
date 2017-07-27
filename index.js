@@ -1,5 +1,5 @@
 /**
- * Version: 0.1.1
+ * Version: 0.1.2
  * Made by Loggeru
  */
 
@@ -104,7 +104,7 @@ module.exports = function LetMePot(dispatch) {
                     hpPotList[i].inCd = true;
                     hpPotList[i].invQtd--;
                     setTimeout(function () { hpPotList[i].inCd = false; }, hpPotList[i].cd * 1000);
-                    if (NOTIFICATIONS) message('Used ' + hpPotList[i].name + ', still have' + hpPotList[i].invQtd + ' left.', true);
+                    if (NOTIFICATIONS) message('Used ' + hpPotList[i].name + ', still have ' + hpPotList[i].invQtd + ' left.', true);
                     break;
                 }
             }
@@ -124,7 +124,7 @@ module.exports = function LetMePot(dispatch) {
                     manaPotList[i].inCd = true;
                     manaPotList[i].invQtd--;
                     setTimeout(function () { manaPotList[i].inCd = false; }, manaPotList[i].cd * 1000);
-                    if (NOTIFICATIONS) message('Used ' + manaPotList[i].name + ', still have' + manaPotList[i].invQtd + ' left.', true);
+                    if (NOTIFICATIONS) message('Used ' + manaPotList[i].name + ', still have ' + manaPotList[i].invQtd + ' left.', true);
                     break;
                 }
             }
