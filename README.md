@@ -1,6 +1,6 @@
 # let-me-pot
 
-Version: 0.1.2
+Version: 0.1.3
 
 Auto HP/MP Pot module for Tera Proxy.
 
