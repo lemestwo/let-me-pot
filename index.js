@@ -1,5 +1,5 @@
 /**
- * Version: 0.1.2
+ * Version: 0.1.3
  * Made by Loggeru
  */
 
@@ -47,14 +47,14 @@ module.exports = function LetMePot(dispatch) {
         message('Let Me Pot is ' + txt, true);
     });
 
-    dispatch.hook('S_LOGIN', 2, (event) => { oCid = event.cid; });
+    dispatch.hook('S_LOGIN', 10, (event) => { oCid = event.gameId; });
 
-    dispatch.hook('S_SPAWN_ME', 1, event => { oAlive = event.alive; });
+    dispatch.hook('S_SPAWN_ME', 2, event => { oAlive = event.alive; });
 
-    dispatch.hook('C_PLAYER_LOCATION', 1, { order: -10 }, (event) => {
-        oX = (event.x1 + event.x2) / 2;
-        oY = (event.y1 + event.y2) / 2;
-        oZ = (event.z1 + event.z2) / 2;
+    dispatch.hook('C_PLAYER_LOCATION', 5, { order: -10 }, (event) => {
+        oX = (event.loc.x + event.dest.x) / 2;
+        oY = (event.loc.y + event.dest.y) / 2;
+        oZ = (event.loc.z + event.dest.z) / 2;
         oW = event.w;
     });
 
@@ -64,34 +64,34 @@ module.exports = function LetMePot(dispatch) {
         }
     });
 
-    dispatch.hook('S_INVEN', 5, { order: -10 }, (event) => {
+    dispatch.hook('S_INVEN', 12, { order: -10 }, (event) => {
         if (!enabled) return; // Too much info, better just turn off if disabled
 
         let tempInv = event.items;
         for (i = 0; i < tempInv.length; i++) {
             for (o = 0; o < hpPotList.length; o++) {
-                if (hpPotList[o].item == tempInv[i].item) {
+                if (hpPotList[o].item == tempInv[i].id) {
                     hpPotList[o].invQtd = tempInv[i].amount;
-                    hpPotList[o].id = tempInv[i].uid.low;
+                    hpPotList[o].id = tempInv[i].dbid;
                 }
             }
             for (p = 0; p < manaPotList.length; p++) {
-                if (manaPotList[p].item == tempInv[i].item) {
+                if (manaPotList[p].item == tempInv[i].id) {
                     manaPotList[p].invQtd = tempInv[i].amount;
-                    manaPotList[p].id = tempInv[i].uid.low;
+                    manaPotList[p].id = tempInv[i].dbid;
                 }
             }
         }
     });
 
-    dispatch.hook('C_USE_ITEM', 1, { order: -10 }, (event) => {
-        if (getPotInfo == true && event.ownerId.equals(oCid)) {
-            message('Potion info: { item: ' + event.item + ' }');
+    dispatch.hook('C_USE_ITEM', 3, { order: -10 }, (event) => {
+        if (getPotInfo == true && event.gameId.equals(oCid)) {
+            message('Potion info: { item: ' + event.id + ' }');
             getPotInfo = false;
         }
     });
 
-    dispatch.hook('S_CREATURE_CHANGE_HP', 1, (event) => {
+    dispatch.hook('S_CREATURE_CHANGE_HP', 6, (event) => {
 
         if (!enabled || !AUTOHP) return;
 
@@ -133,26 +133,20 @@ module.exports = function LetMePot(dispatch) {
     });
 
     function useItem(potInfo) {
-        dispatch.toServer('C_USE_ITEM', 1, {
-            ownerId: oCid,
-            item: potInfo.item,
-            id: potInfo.id,
+        dispatch.toServer('C_USE_ITEM', 3, {
+            gameId: oCid,
+            id: potInfo.item,
+            dbid: potInfo.id,
+            target: 0,
+            amount: 1,
+            dest: {x: 0, y: 0, z: 0},
+            loc: {x: oX, y: oY, z: oZ},
+            w: oW,
             unk1: 0,
             unk2: 0,
             unk3: 0,
-            unk4: 1,
-            unk5: 0,
-            unk6: 0,
-            unk7: 0,
-            x: oX,
-            y: oY,
-            z: oZ,
-            w: oW,
-            unk8: 0,
-            unk9: 0,
-            unk10: 0,
-            unk11: 1
-        });
+            unk4: 1
+        });        
     }
 
     function message(msg, chat = false) {
