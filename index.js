@@ -97,7 +97,7 @@ module.exports = function LetMePot(dispatch) {
 
         if (event.target.equals(oCid)) {
             oHp = Math.round(event.curHp / event.maxHp * 100);
-            if (event.curHp <= 0) oAlive = false;
+            (event.curHp <= 0) ? oAlive = false : oAlive = true;
             for (let i = 0; i < hpPotList.length; i++) {
                 if (oHp <= hpPotList[i].use_at && hpPotList[i].inCd == false && hpPotList[i].invQtd > 0 && oInCombat == true && oAlive == true) {
                     useItem(hpPotList[i]);
